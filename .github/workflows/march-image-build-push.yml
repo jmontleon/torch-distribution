@@ -1,0 +1,23 @@
+name: 'Build and Push Multi-Arch Image'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  push-quay:
+    name: Build and Push Manifest
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+    steps:
+    - name: Checkout Push to Registry action
+      uses: konveyor/release-tools/build-push-quay@main
+      with:
+        architectures: "amd64"
+        containerfile: "./Dockerfile"
+        image_name: "torch-distribution"
+        image_namespace: "jmontleon"
+        image_registry: "quay.io"
+        quay_publish_robot: ${{ secrets.QUAY_PUBLISH_ROBOT }}
+        quay_publish_token: ${{ secrets.QUAY_PUBLISH_TOKEN }}
+        ref: ${{ github.ref }}
